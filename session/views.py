@@ -6,7 +6,7 @@ from django.contrib import messages
 from .forms import SignUpForm
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
-# from django.template.loader import render_to_string
+from django.template.loader import render_to_string
 from django.conf import settings
 from django.core.mail import send_mail
 # Create your views here.
@@ -33,29 +33,57 @@ def logoutuser(request):
     messages.success(request,"Successfully Log out")
     return redirect('HomeView')
 
+
 def registration(request):
-    if request.method=="POST":
-        form=SignUpForm(request.POST)
+    if request.method == "POST":
+        form = SignUpForm(request.POST)
         if form.is_valid():
-            form.save()
-            
-            username=User.username
-            email=form.cleaned_data.get('email')
-            message = 'Welcome to Tuition BD .Please Click confirm to registration'
-            send_mail(
-                username,
-                message,
-                'settings.EMAIL_HOST_USER',
-                [email],
-                fail_silently=False
-            )
+            user = form.save()
+            # user.is_active = False
+            user.save()
+            current_site = get_current_site(request)
+            mail_subject = 'Activate Your Account'
+            message = render_to_string('session/account.html', {
+                'user': user,
+                'domain': current_site.domain,
+                
+            })
+            send_mail = form.cleaned_data.get('email')
+            email = EmailMessage(mail_subject, message, to=[send_mail])
+            email.send()
+            messages.success(request, 'Successfully created account')
+            messages.info(
+                request, 'Activate Your account from the mail you provided')
             return redirect('login')
-
     else:
-        form=SignUpForm()
-    return render(request,'session/signup.html',{'form':form})
+        form = SignUpForm()
+    return render(request, 'session/signup.html', {'form': form})
 
-# 
+# another method for sending email 
+
+# def registration(request):
+#     if request.method=="POST":
+#         form=SignUpForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+            
+#             username=User.username
+#             email=form.cleaned_data.get('email')
+#             message = 'Welcome to Tuition BD .Please Click confirm to registration'
+#             send_mail(
+#                 username,
+#                 message,
+#                 'settings.EMAIL_HOST_USER',
+#                 [email],
+#                 fail_silently=False
+#             )
+#             return redirect('login')
+
+#     else:
+#         form=SignUpForm()
+#     return render(request,'session/signup.html',{'form':form})
+
+# # 
 
 def change_password(request):
     if request.method=="POST":
