@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block body %}
+{% load humanize %}
+<div class="container">
+  <div class="row">
+<h1 class="text-center">Post Detail</h1>
+<div class="col-md-4">
+  <img src="{{object.image.url}}" style="width:300px; height:300px" alt="" class="rounded-circle img-tumbnail">
+</div>
+<div class="col-md-6 mt-5">
+Title={{object.title}} <br>
+by:{{object.user.username}} at: {{object.created_at | naturaltime}} <br>
+Subject={% for s in object.subject.all %}
+{{s.name}},
+{% endfor %} <br>
+
+Class={% for s in object.class_in.all %}
+{{s.name}},
+{% endfor %} <br>
+Category={{object.category}} <br>
+Salary={{object.salary}} <br>
+Medium={{object.medium}} <br>
+Created_at={{object.created_at}} <br>
+Available={% if object.available %} Yes {% else %} No
+  
+{% endif %} <br>
+<p>
+  Details: {{object.details}}
+</p>
+{% if request.user == object.user %}
+<div class="d-grid gap-2 col-6 mx-auto mb-3">
+  <a class="btn btn-primary" href="/tuition/edit/{{object.id}}/">Edit</a>
+  <a class="btn btn-danger" href="/tuition/delete/{{object.id}}/">Delete</a>
+</div>
+
+{% endif %}
+</div>
+</div>
+</div>
+  
+{% endblock body %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="container">
+    <form action="" method="post" class="mt-5">
+        {% csrf_token %}
+        <span class="text-center text-danger">Are you want to delete this post ? <i class="fa-solid fa-user-plus"></i></span>
+        <button type="submit" class="btn btn-outline-danger">Yes</button>
+        <a href="/tuition/postlist/" class="btn btn-outline-primary"> Cancel</a>
+    </form>
+
+</div>
+{% endblock body %}

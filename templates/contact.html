@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block body %}
+<!-- {% load crispy_forms_tags %} -->
+<div class="container">
+  <div class="col-md-6 offset-md-2">
+    <h1 class="text-center">Contact Please</h1>
+    <div class="container">
+      
+      <form action="" method="post">
+        {% csrf_token %}
+        
+        {{form|crispy}}
+        <div class="d-grid gap-2">
+          <button class="btn btn-success m-2" type="submit">Submit</button>
+          
+        </div>
+        
+      </form>
+    </div>
+  </div>
+</div>
+ 
+{% endblock body %}
